@@ -6,8 +6,9 @@
  * @flow
  */
 
-import React from 'react';
+import React, {Component} from 'react';
 import ImagePicker from 'react-native-image-picker';
+import { createStackNavigator } from 'react-navigation'
 
 import {
   SafeAreaView,
@@ -17,6 +18,8 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  Button,
+  TextInput,
 } from 'react-native';
 
 import {
@@ -130,19 +133,33 @@ function listenEventToDo() {
     } 
   });*/
 
+  const LoginStackNavigator = createStackNavigator({
+    App: { // Ici j'ai appelé la vue "Search" mais on peut mettre ce que l'on veut. C'est le nom qu'on utilisera pour appeler cette vue
+      screen: App,
+      navigationOptions: {
+        HomeScreen: 'Rechercher'
+      }
+    }
+  })
 
-const App: () => React$Node = () => {
+  class HomeScreen extends React.Component {
+    static navigationOptions = {
+      title: 'Welcome',
+    };
+    render() {
+      const {navigate} = this.props.navigation;
+      return (
+        <Button
+          title="Go to Jane's profile"
+          onPress={() => navigate('Profile', {name: 'Jane'})}
+        />
+      );
+    }
+  }
 
-  this.state = {
-    filePath: {},
-  };
+export default class App extends Component {
+  
 
-  let options = {
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
 
   /*ImagePicker.launchCamera(function (options, response) {
     // Response data
@@ -163,17 +180,56 @@ const App: () => React$Node = () => {
       });
     }
   });*/
+  state = {email: 'alpha-oumar@hotmail.fr',
+  mdp: '123456'
+  }
 
-  signIn("alpha-oumar@hotmail.fr", "123456").then(function(uid){
-    //setTodo("hello world");
-    //updateTodo("iKy8ymiEjEwEpm6KN5Y6", "hehehehehe");
-    //listenEventToDo();
-    console.log("OK");
-   });
-
+render(){
+  let options = {
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
   return (
-              <Text style={{alignItems: 'center'}}>Step One</Text>
+    <>
+<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Connection :</Text>
+        <TextInput
+          style={{height: 40}}
+          placeholder="Entrez ici votre addresse e-mail"
+          onChangeText={(text) => this.setState({email: text})}
+      
+
+          />  
+
+        <TextInput
+          style={{height: 40}}
+          placeholder="Entrez ici votre mot de passe"
+          onChangeText={(text) => this.setState({mdp: text})}
+          // autoCompleteType={password}
+
+          />
+
+          <View style={styles.buttonContainer}>
+          <Button
+            title="Me connecter"
+            onPress={() => {
+              alert(this.state.email);
+              signIn(this.state.email, this.state.mdp).then(function(uid){
+                //setTodo("hello world");
+                //updateTodo("iKy8ymiEjEwEpm6KN5Y6", "hehehehehe");
+                //listenEventToDo();
+                console.log("OK");
+               // navigate('Rechercher')
+              });
+            }}
+            />
+        </View>
+      </View>    
+</>
   );
+}
 };
 
 const styles = StyleSheet.create({
@@ -215,4 +271,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+//export default App;
