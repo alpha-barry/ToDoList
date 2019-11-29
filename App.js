@@ -27,11 +27,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+//import firebase from 'react-native-firebase';
+
 import firebase, { firestore } from 'firebase';
 import config from './config'
 
 require("firebase/firestore");
-
 // initialise firebase -------------------
 
  firebase.initializeApp(config);
@@ -120,12 +121,48 @@ function listenEventToDo() {
    });
 }
 
+/*firebase.messaging().hasPermission()
+  .then(enabled => {
+    if (enabled) {
+      // user has permissions
+    } else {
+      // user doesn't have permission
+    } 
+  });*/
 
-ImagePicker.launchCamera(options = { noData: true,}, (response)  => {
-  // Response data
-});
 
 const App: () => React$Node = () => {
+
+  this.state = {
+    filePath: {},
+  };
+
+  let options = {
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+
+  /*ImagePicker.launchCamera(function (options, response) {
+    // Response data
+
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+      alert(response.customButton);
+    } else {
+      let source = response;
+      // You can also display the image using data:
+      // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.state.setState({
+        filePath: source,
+      });
+    }
+  });*/
 
   signIn("alpha-oumar@hotmail.fr", "123456").then(function(uid){
     //setTodo("hello world");
@@ -135,51 +172,7 @@ const App: () => React$Node = () => {
    });
 
   return (
-    <>
-      
-
- {/*}    <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-          </SafeAreaView> */}
-    </>
+              <Text style={{alignItems: 'center'}}>Step One</Text>
   );
 };
 
