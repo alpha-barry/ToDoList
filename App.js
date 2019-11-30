@@ -8,7 +8,8 @@
 
 import React, {Component} from 'react';
 import ImagePicker from 'react-native-image-picker';
-import { createStackNavigator } from 'react-navigation'
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 
 import {
   SafeAreaView,
@@ -30,12 +31,15 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import firebase from 'firebase';
 //import firebase from 'react-native-firebase';
 
-import firebase, { firestore } from 'firebase';
 import config from './config'
 
-require("firebase/firestore");
+
+//require("firebase/firestore");
+//require("firebase/messaging");
+
 // initialise firebase -------------------
 
  firebase.initializeApp(config);
@@ -121,43 +125,39 @@ function listenEventToDo() {
         console.log("Removed city: ", change.doc.data());
       }
     });
-   });
+  });
+
 }
 
-/*firebase.messaging().hasPermission()
+/*messaging().hasPermission()
   .then(enabled => {
     if (enabled) {
+      console.log("OK");
       // user has permissions
     } else {
+      console.log("KO");
       // user doesn't have permission
     } 
   });*/
 
-  const LoginStackNavigator = createStackNavigator({
-    App: { // Ici j'ai appelé la vue "Search" mais on peut mettre ce que l'on veut. C'est le nom qu'on utilisera pour appeler cette vue
-      screen: App,
-      navigationOptions: {
-        HomeScreen: 'Rechercher'
-      }
-    }
-  })
-
-  class HomeScreen extends React.Component {
-    static navigationOptions = {
+  
+ class ToDoListPage extends Component {
+   static navigationOptions = {
       title: 'Welcome',
     };
     render() {
-      const {navigate} = this.props.navigation;
+     //const {navigate} = this.props.navigation;
       return (
-        <Button
-          title="Go to Jane's profile"
-          onPress={() => navigate('Profile', {name: 'Jane'})}
-        />
-      );
+        <Text numberOfLines={5}>
+        salut
+      </Text> 
+           );
     }
   }
 
-export default class App extends Component {
+
+
+class LoginPage extends Component {
   
 
 
@@ -185,12 +185,6 @@ export default class App extends Component {
   }
 
 render(){
-  let options = {
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
   return (
     <>
 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -216,12 +210,13 @@ render(){
             title="Me connecter"
             onPress={() => {
               alert(this.state.email);
-              signIn(this.state.email, this.state.mdp).then(function(uid){
+              signIn(this.state.email, this.state.mdp).then((uid) => {
                 //setTodo("hello world");
                 //updateTodo("iKy8ymiEjEwEpm6KN5Y6", "hehehehehe");
                 //listenEventToDo();
                 console.log("OK");
-               // navigate('Rechercher')
+               this.props.navigation.navigate('ToDoList', {firebase: firebase});
+                // navigate('Rechercher')
               });
             }}
             />
@@ -271,4 +266,10 @@ const styles = StyleSheet.create({
   },
 });
 
-//export default App;
+const MainNavigator = createStackNavigator({
+  Home: {screen: LoginPage},
+  ToDoList: {screen: ToDoListPage}
+});
+
+const App = createAppContainer(MainNavigator);
+export default App;
